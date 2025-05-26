@@ -1,88 +1,74 @@
-# EX 2A BACKTRACKING - RAT IN MAZE PROBLEM
+# EX 3A Knight Tour & Count Path
 
 ## AIM:
-To implement the Rat in a Maze problem using backtracking and find all possible paths from the start to the destination in a given maze.
+To write a python program to find minimum steps to reach to specific cell in minimum moves by knight
 
 
 ## Algorithm
+1. Define the Knight’s Moves: A knight has 8 possible moves from a given position.
 
-1. Start at the beginning (0, 0): If the current position is the destination, add the current path to the list of solutions.
+2. Start from the source cell.
 
-2. Mark the current cell as visited: This will help prevent revisiting the same cell.
+3. Use a queue to explore positions level by level.
 
-3. Move in all four possible directions: Down, Left, Up, Right:
+4. Mark visited positions to avoid cycles.
 
-4. If no valid moves are possible: Backtrack by unmarking the current cell and trying a different direction.
+5. Count steps until the target is reached.
 
-5. Repeat the process until all possible paths are found or the destination is reached.
-
-6. Return all paths that lead to the destination.
- 
-
+6. If target is reached, return the number of steps.
 ## Program:
 
 
 
 ```python
-N = 4
- 
-def printSolution( sol ):
+class cell:
      
-    for i in sol:
-        for j in i:
-            print(str(j) + " ", end ="")
-        print("")
- 
+    def __init__(self, x = 0, y = 0, dist = 0):
+        self.x = x
+        self.y = y
+        self.dist = dist
 
-def isSafe( maze, x, y ):
-     
-    if x >= 0 and x < N and y >= 0 and y < N and maze[x][y] == 1:
+def isInside(x, y, N):
+    if (x >= 1 and x <= N and
+        y >= 1 and y <= N):
         return True
-     
     return False
- 
-
-def solveMaze( maze ):
-     
-    # Creating a 4 * 4 2-D list
-    sol = [ [ 0 for j in range(4) ] for i in range(4) ]
-     
-    if solveMazeUtil(maze, 0, 0, sol) == False:
-        print("Solution doesn't exist");
-        return False
-     
-    printSolution(sol)
-    return True
-     
-
-def solveMazeUtil(maze, x, y, sol):
-    if x==N-1 and y==N-1 and maze[x][y]==1:
-        sol[x][y]=1
-        return True
-    if isSafe(maze,x,y):
-        sol[x][y]=1
-        if solveMazeUtil(maze,x+1,y,sol):
-            return True
-        if solveMazeUtil(maze,x,y+1,sol):
-            return True
-        sol[x][y]=0
-    return False
-
-if __name__ == "__main__":
-    # Initialising the maze
-    maze = [ [1, 0, 0, 0],
-             [1, 1, 0, 1],
-             [0, 1, 0, 0],
-             [1, 1, 1, 1] ]
-              
-    solveMaze(maze)
+def minStepToReachTarget(knightpos,
+                         targetpos, N):
+    # add your code here
+    #Start here
+    dx = [2, 2, -2, -2, 1, 1, -1, -1]
+    dy = [1, -1, 1, -1, 2, -2, 2, -2]
+    queue = []
+    queue.append(cell(knightpos[0], knightpos[1], 0))
+    visited = [[False for i in range(N + 1)] for j in range(N + 1)]
+    visited[knightpos[0]][knightpos[1]] = True
+    while(len(queue) > 0):
+        t = queue[0]
+        queue.pop(0)
+        if(t.x == targetpos[0] and
+           t.y == targetpos[1]):
+            return t.dist
+        for i in range(8):
+            x = t.x + dx[i]
+            y = t.y + dy[i]
+            if(isInside(x, y, N) and not visited[x][y]):
+                visited[x][y] = True
+                queue.append(cell(x, y, t.dist + 1))
+    #End here
+if __name__=='__main__':
+    N = 30
+    knightpos = [1, 1]
+    targetpos = [30, 30]
+    print(minStepToReachTarget(knightpos,
+                               targetpos, N))
 
 ```
 
 ## Output:
+![image](https://github.com/user-attachments/assets/70983630-4f54-4481-b3b2-78ffb720bae1)
 
-![image](https://github.com/user-attachments/assets/46e3ae11-167c-4aa2-924a-bc3adc993160)
 
 
 ## Result:
-The Rat in a Maze program executed successfully, and a valid path from the start to the destination was found and display.
+The program executed successfully, and the minimum number of steps for the knight to reach the target was calculated.
